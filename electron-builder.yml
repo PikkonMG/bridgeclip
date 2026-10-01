@@ -125,7 +125,10 @@ deb:
   depends:
     - libgtk-3-0
     - libnss3
-    - libasound2
+    # Name the real ALSA library first. Otherwise apt can satisfy libasound2
+    # with liboss4-salsa-asound2 on Ubuntu 24.04, which Electron cannot load.
+    - libasound2t64 | libasound2
+    - libgbm1
     - libxss1
     - libxtst6
     - xdg-utils
