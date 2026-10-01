@@ -83,7 +83,7 @@ renderers=0
 for pid in $(pgrep -u "$SMOKE_USER" -f -- '--type=renderer'); do
   renderers=$((renderers + 1))
   tr '\0' ' ' <"/proc/$pid/cmdline" | grep -q -- '--no-sandbox' && fail "renderer $pid runs with --no-sandbox"
-  [[ "$(awk '/^Seccomp:/{print $2}' "/proc/$pid/status")" == 2 ]] || fail "renderer $pid has no seccomp sandbox"
+  [[ "$(grep '^Seccomp:' "/proc/$pid/status" | cut -f2)" == 2 ]] || fail "renderer $pid has no seccomp sandbox"
 done
 (( renderers > 0 )) || fail "no renderer process found"
 echo "Sandboxed renderers: $renderers"
