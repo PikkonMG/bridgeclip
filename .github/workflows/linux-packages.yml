@@ -45,10 +45,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install packaging tools
+      - name: Install packaging and test tools
+        # The media tests run the system FFmpeg, as in local development.
         run: |
           sudo apt-get update
-          sudo apt-get install -y patchelf rpm
+          sudo apt-get install -y patchelf rpm ffmpeg
 
       - name: Install dependencies
         run: npm ci
