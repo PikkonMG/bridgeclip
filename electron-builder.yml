@@ -113,7 +113,11 @@ linux:
   artifactName: BridgeClip-${version}-linux-x64.${ext}
   executableName: bridgeclip
   category: AudioVideo
-  icon: build/icon.png
+  # hicolor sizes; desktops find no theme directory for a single 1024px icon.
+  icon: build/icons
+  # Wayland app_id and X11 WM_CLASS match bridgeclip.desktop, so docks group
+  # the window with its launcher.
+  syncDesktopName: true
   target:
     - target: AppImage
       arch: [x64]
