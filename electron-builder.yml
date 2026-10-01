@@ -108,8 +108,8 @@ nsis:
   installerHeaderIcon: build/icon.ico
 
 linux:
-  # Builder otherwise expands x64 as x86_64 for AppImage and amd64 for DEB.
-  # Linux currently supports x64 only; keep one stable release naming contract.
+  # Builder otherwise expands x64 as x86_64 for AppImage and RPM and amd64 for
+  # DEB. Linux currently supports x64 only; keep one stable release naming contract.
   artifactName: BridgeClip-${version}-linux-x64.${ext}
   executableName: bridgeclip
   category: AudioVideo
@@ -122,6 +122,8 @@ linux:
     - target: AppImage
       arch: [x64]
     - target: deb
+      arch: [x64]
+    - target: rpm
       arch: [x64]
   maintainer: BridgeMind LLC <support@bridgemind.ai>
 
@@ -144,6 +146,40 @@ deb:
     - libatspi2.0-0
     - libuuid1
     - libsecret-1-0
+
+rpm:
+  # Shared-library capabilities resolve on Fedora, RHEL and openSUSE alike,
+  # where the package names for the same libraries differ.
+  depends:
+    - libgtk-3.so.0()(64bit)
+    - libglib-2.0.so.0()(64bit)
+    - libgobject-2.0.so.0()(64bit)
+    - libgio-2.0.so.0()(64bit)
+    - libpango-1.0.so.0()(64bit)
+    - libcairo.so.2()(64bit)
+    - libatk-1.0.so.0()(64bit)
+    - libatk-bridge-2.0.so.0()(64bit)
+    - libatspi.so.0()(64bit)
+    - libnss3.so()(64bit)
+    - libnssutil3.so()(64bit)
+    - libsmime3.so()(64bit)
+    - libnspr4.so()(64bit)
+    - libcups.so.2()(64bit)
+    - libdbus-1.so.3()(64bit)
+    - libexpat.so.1()(64bit)
+    - libudev.so.1()(64bit)
+    - libasound.so.2()(64bit)
+    - libgbm.so.1()(64bit)
+    - libxkbcommon.so.0()(64bit)
+    - libX11.so.6()(64bit)
+    - libxcb.so.1()(64bit)
+    - libXcomposite.so.1()(64bit)
+    - libXdamage.so.1()(64bit)
+    - libXext.so.6()(64bit)
+    - libXfixes.so.3()(64bit)
+    - libXrandr.so.2()(64bit)
+    - libsecret-1.so.0()(64bit)
+    - xdg-utils
 
 # Auto-updates come from GitHub Releases: electron-updater reads
 # latest-mac.yml / latest.yml / latest-linux.yml from the published release.
