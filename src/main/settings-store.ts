@@ -150,7 +150,9 @@ function encodeSecret(value: string): PersistedSecret {
   if (canEncrypt()) {
     return { scheme: 'safeStorage', value: safeStorage.encryptString(value).toString('base64') }
   }
-  throw new Error('Secure key storage is unavailable. Unlock or configure your operating system keychain before saving API keys.')
+  throw new Error(process.platform === 'linux'
+    ? 'No desktop keyring is available to encrypt API keys. Start and unlock GNOME Keyring, KWallet or another Secret Service keyring (such as KeePassXC), then try again.'
+    : 'Secure key storage is unavailable. Unlock or configure your operating system keychain before saving API keys.')
 }
 
 /**

@@ -72,6 +72,7 @@ bridgeclip/scripts/stage-runtime.test.cjs
 bridgeclip/scripts/stage-python-license.sh
 bridgeclip/scripts/verify-packaged-mac.sh
 bridgeclip/src/main/auto-updater.ts
+bridgeclip/src/main/password-store.ts
 bridgeclip/src/main/automation-metadata.ts
 bridgeclip/src/main/automations.ts
 bridgeclip/src/main/file-manager.ts
@@ -324,3 +325,5 @@ bridgeclip/tests/audit-renderer.test.cjs
 bridgeclip/tests/main/audit-main-core.test.cjs
 bridgeclip/tests/main/audit-pipeline.test.cjs
 bridgeclip/tests/zernio/audit-zernio.test.cjs
+bridgeclip/tests/main/password-store.test.cjs
+bridgeclip/tests/main/key-storage.e2e.cjs
