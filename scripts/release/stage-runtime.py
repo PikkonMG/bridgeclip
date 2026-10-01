@@ -57,6 +57,21 @@ def copy_shared_libraries(source, destination):
         shutil.copy2(library, target)
 
 
+def stage_deno(lock, target, binaries, work):
+    """Stage the JavaScript runtime yt-dlp needs to solve YouTube challenges."""
+    deno = lock["deno"]
+    archive = work / deno[target]["file"]
+    download(f'https://github.com/denoland/deno/releases/download/v{deno["version"]}/{archive.name}', archive, deno[target]["sha256"])
+    extract(archive, work / "deno")
+    executable = binaries / ("deno.exe" if target == "windows" else "deno")
+    shutil.copy2(work / "deno" / executable.name, executable)
+    executable.chmod(0o755)
+    download(f'https://raw.githubusercontent.com/denoland/deno/v{deno["version"]}/LICENSE.md', binaries / "DENO-LICENSE", deno["license_sha256"])
+    reported = subprocess.check_output([str(executable), "--version"], text=True).split()[1]
+    if reported != deno["version"]:
+        raise RuntimeError(f"Unexpected Deno version: {reported}")
+
+
 def stage():
     target = {"win32": "windows", "linux": "linux"}.get(sys.platform)
     if target is None or platform.machine().lower() not in ("amd64", "x86_64"):
@@ -107,11 +122,14 @@ def stage():
             f'FFmpeg 8.1.3, LGPL shared build. Build recipes and dependency revisions:\n'
             f'https://github.com/BtbN/FFmpeg-Builds/tree/{ff["build_commit"]}\n'
             'Windows/Linux official publication also requires the reviewed corresponding-source archive.\n', encoding="utf-8")
+        if target in lock["deno"]:
+            stage_deno(lock, target, binaries, work)
         if target == "windows":
             subprocess.run(["powershell", "-NoProfile", "-File", str(ROOT / "scripts/release/build-launcher.ps1")], check=True)
         else:
+            # Bundled tools come first so yt-dlp uses the shipped FFmpeg and Deno.
             launcher = binaries / "yt-dlp"
-            launcher.write_text('#!/bin/sh\nBUNDLE_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)\nexec "$BUNDLE_DIR/../engine-venv/bin/python3" -P -m yt_dlp "$@"\n')
+            launcher.write_text('#!/bin/sh\nBUNDLE_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)\nPATH="$BUNDLE_DIR:$PATH" exec "$BUNDLE_DIR/../engine-venv/bin/python3" -P -m yt_dlp "$@"\n')
             launcher.chmod(0o755)
         for cache in venv.rglob("__pycache__"):
             shutil.rmtree(cache)
