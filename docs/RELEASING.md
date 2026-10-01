@@ -10,7 +10,7 @@ The primary maintainers set the project's direction and review contributions und
 | --- | --- | --- | --- |
 | macOS | Apple silicon, Intel | DMG and updater ZIP | Developer ID, team `9CBJCDR3J2`, notarized app and DMG, stapling, Gatekeeper |
 | Windows | x64 | NSIS EXE | BRIDGEMIND LLC Authenticode signatures; timestamp; installed runtime smoke |
-| Linux | x64 | AppImage and DEB | Installed/extracted runtime smoke; signed checksum manifest |
+| Linux | x64 | AppImage, DEB and RPM | Installed/extracted runtime smoke; signed checksum manifest |
 
 Version `v0.1.19` targets all four platform/architecture builds in one release, including the first Linux packages. Publication is gated on successful native tests, package acceptance, signatures and complete source archives; use the published release assets as the availability record. Windows ARM64 and Linux ARM64 are not release targets. Do not advertise an unsupported OS version based only on the build runner version.
 
@@ -32,9 +32,11 @@ Installed apps check about 15 seconds after launch and then every four hours, do
 
 macOS: `bash scripts/prepare-resources.sh arm64` on Apple silicon, or `x64` on Intel. This builds LGPL FFmpeg and stages its caption libraries and licenses.
 
-Windows/Linux x64: `python scripts/release/stage-runtime.py` from a clean checkout. Windows requires Visual C++ build tools for the relocatable yt-dlp launcher. Linux requires `patchelf`. Python and FFmpeg downloads are pinned by SHA-256 in `scripts/release/runtime-lock.json`. An HTTPS mirror may be selected with `BRIDGECLIP_FFMPEG_MIRROR`, preserving the same digest checks. Upstream FFmpeg daily assets expire; official automation keeps a private mirror of the exact archives.
+Windows/Linux x64: `python scripts/release/stage-runtime.py` from a clean checkout. Windows requires Visual C++ build tools for the relocatable yt-dlp launcher. Linux requires `patchelf`, stages the pinned Deno runtime that yt-dlp uses for YouTube, and needs `rpm` (`rpmbuild`) to build the RPM. Python and FFmpeg downloads are pinned by SHA-256 in `scripts/release/runtime-lock.json`. An HTTPS mirror may be selected with `BRIDGECLIP_FFMPEG_MIRROR`, preserving the same digest checks. Upstream FFmpeg daily assets expire; official automation keeps a private mirror of the exact archives.
 
 Run `npm ci`, application and engine tests, dependency audits, `npm run build`, then electron-builder for the native target. Official Windows builds use `scripts/release/windows-config.cjs` with Azure signing configuration and `forceCodeSigning`; unsigned developer packages must never be labeled official releases.
+
+Where GitHub Actions runs, `.github/workflows/linux-packages.yml` builds the AppImage, DEB and RPM for every pull request and `main` push. It installs each package on clean containers (DEB: Ubuntu 22.04, Ubuntu 24.04, Debian 12; RPM: Fedora 44, openSUSE Tumbleweed; AppImage: Ubuntu 24.04 without libfuse2) using `scripts/release/linux-package-smoke.sh`, which requires the installed app to start as an ordinary user with a sandboxed renderer, pass every startup tool check, and render a captioned clip. A `vX.Y.Z` tag matching `package.json` adds a draft release with the three packages, `latest-linux.yml`, `release-manifest.json` and `SHA256SUMS.txt`; it does not sign the checksums. Set the repository variable `BRIDGECLIP_FFMPEG_MIRROR` once the pinned FFmpeg archive expires upstream.
 
 `scripts/release/verify-runtime.py <packaged-resources-directory>` copies resources to a path containing spaces and tests the shipped Python, FFmpeg, framing model, captions, speed, audio, and downloader without relying on the checkout. `scripts/release/collect-artifacts.cjs` rejects missing platforms, mismatched versions, and altered artifacts.
 

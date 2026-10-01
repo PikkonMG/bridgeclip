@@ -20,12 +20,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Mai
 - **Free editor media** removes an editor project's source copy and preview once you're done with it.
 - BridgeClip asks whether to save or discard unsaved edits before quitting, and offers **Reload project** when a project was changed elsewhere.
 - This changelog, in Settings → About and the Help menu.
+- An **RPM** package for Linux on Fedora, RHEL and openSUSE, alongside the AppImage and DEB.
 
 ### Changed
 
 - Smart framing ignores weak background faces, stays on a speaker who briefly looks away, follows talking heads inside 4:3 video, and analyzes footage faster.
 - Screen + webcam clips fill the top panel again.
 - Editor previews use much less disk space, and downloaded sources are moved into the project instead of copied.
+- Linux packages are smaller: the media libraries are no longer stored three times. They now also include the JavaScript runtime that the YouTube downloader needs.
 
 ### Fixed
 
@@ -36,6 +38,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Mai
 - Unattended posts no longer use text from the source video's description, and refuse web addresses or @handles that aren't said in the video.
 - Deleting a clip also removes its caption and YouTube text files.
 - A missing transcript shows a clear message, and research citations can be selected and copied.
+- The Linux AppImage starts without libfuse2, which current Ubuntu, Debian and Fedora no longer install, and keeps the app sandbox where the system allows it.
+- The Linux DEB installs everything it needs to start on minimal Ubuntu 22.04 and 24.04 systems.
+- Linux launchers and docks show the BridgeClip icon and group its windows with the launcher.
 
 ## [0.1.19] - 2026-09-27
 

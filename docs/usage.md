@@ -10,7 +10,7 @@ Choose your platform on [bridgeclip.ai](https://www.bridgeclip.ai) or [GitHub Re
 
 - **macOS (Apple silicon or Intel):** open the matching DMG and drag BridgeClip to Applications. Official builds are Developer ID signed and notarized by Apple.
 - **Windows x64:** run the signed EXE installer.
-- **Linux x64:** install the DEB with your package manager, or make the AppImage executable before opening it. An unlocked desktop secret service is required to save API keys.
+- **Linux x64:** install the DEB (Debian, Ubuntu) or the RPM (Fedora, RHEL, openSUSE) with your package manager, or make the AppImage executable before opening it. The AppImage needs no extra libraries such as libfuse2. On Ubuntu 24.04 and later, prefer the DEB: Ubuntu blocks the Chromium sandbox for AppImages, so an AppImage there runs without it. An unlocked desktop secret service is required to save API keys.
 
 See [release verification](RELEASING.md#verify-a-download) for signatures and checksums.
 
