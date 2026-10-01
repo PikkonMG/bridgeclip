@@ -180,6 +180,9 @@ rpm:
     - libXrandr.so.2()(64bit)
     - libsecret-1.so.0()(64bit)
     - xdg-utils
+    # Chromium aborts without any font; minimal openSUSE installs have none.
+    # The same package name exists on Fedora and openSUSE.
+    - liberation-fonts
 
 # Auto-updates come from GitHub Releases: electron-updater reads
 # latest-mac.yml / latest.yml / latest-linux.yml from the published release.
