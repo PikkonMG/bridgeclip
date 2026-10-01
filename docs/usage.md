@@ -16,9 +16,9 @@ See [release verification](RELEASING.md#verify-a-download) for signatures and ch
 
 ### Automatic updates
 
-BridgeClip keeps itself up to date. It checks [Releases](https://github.com/bridge-mind/bridgeclip/releases) shortly after launch and every four hours, downloads a new version in the background, and installs it when you choose **Restart to update** (in the sidebar or **Settings → About**) or the next time you quit. macOS only installs an update signed by the same developer, and every download is checked against the SHA-512 published with the release.
+BridgeClip keeps itself up to date. It checks [Releases](https://github.com/bridge-mind/bridgeclip/releases) shortly after launch and every four hours, downloads a new version in the background, and installs it when you choose **Restart to update** (in the sidebar or **Settings → About**) or the next time you quit. Linux DEB and RPM installs update only from **Restart to update**, which asks for an administrator password. macOS only installs an update signed by the same developer, and every download is checked against the SHA-512 published with the release.
 
-Copies run from source, local package builds and apps opened straight from the disk image don't update themselves; **Settings → About** says why. To turn updates off, start BridgeClip with `BRIDGECLIP_DISABLE_AUTO_UPDATE=1`.
+Copies run from source, local package builds, apps opened straight from the disk image and Linux copies that aren't the installed AppImage, DEB or RPM (such as an extracted AppImage) don't update themselves; **Settings → About** says why. To turn updates off, start BridgeClip with `BRIDGECLIP_DISABLE_AUTO_UPDATE=1`.
 
 ## Create your first clips
 
