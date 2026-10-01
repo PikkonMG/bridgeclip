@@ -121,6 +121,11 @@ linux:
       arch: [x64]
   maintainer: BridgeMind LLC <support@bridgemind.ai>
 
+# The static AppImage runtime needs no libfuse2, which current Ubuntu, Debian
+# and Fedora installs lack. Its desktop entry also keeps the Chromium sandbox.
+toolsets:
+  appimage: "1.0.3"
+
 deb:
   depends:
     - libgtk-3-0
