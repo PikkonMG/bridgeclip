@@ -38,6 +38,25 @@ def extract(archive, destination):
             bundle.extractall(destination, filter="data")
 
 
+def copy_shared_libraries(source, destination):
+    """Copy each shared library once, named by the SONAME the loader requests.
+
+    Archives ship libfoo.so -> libfoo.so.N -> libfoo.so.N.M.P symlinks. Copying
+    without symlinks would store every library three times.
+    """
+    destination.mkdir()
+    for library in sorted(source.glob("*.so*")):
+        if library.is_symlink() or not library.is_file():
+            continue
+        soname = subprocess.check_output(["patchelf", "--print-soname", str(library)], text=True).strip()
+        if not soname or soname != Path(soname).name:
+            raise RuntimeError(f"Shared library has no usable SONAME: {library.name}")
+        target = destination / soname
+        if target.exists():
+            raise RuntimeError(f"Duplicate shared library SONAME: {soname}")
+        shutil.copy2(library, target)
+
+
 def stage():
     target = {"win32": "windows", "linux": "linux"}.get(sys.platform)
     if target is None or platform.machine().lower() not in ("amd64", "x86_64"):
@@ -76,7 +95,7 @@ def stage():
         distribution, = (work / "ffmpeg").iterdir()
         shutil.copytree(distribution / "bin", binaries, symlinks=False)
         if target == "linux":
-            shutil.copytree(distribution / "lib", binaries / "lib", symlinks=False)
+            copy_shared_libraries(distribution / "lib", binaries / "lib")
             # Keep every loader path inside this relocatable media directory.
             for binary in [binaries / "ffmpeg", binaries / "ffprobe", *list((binaries / "lib").glob("*.so*"))]:
                 if binary.is_file():

@@ -59,6 +59,7 @@ bridgeclip/scripts/prepare-resources.sh
 bridgeclip/scripts/public-draft-manifest.txt
 bridgeclip/scripts/resource-staging.test.cjs
 bridgeclip/scripts/stage-ffmpeg-libs-mac.sh
+bridgeclip/scripts/stage-runtime.test.cjs
 bridgeclip/scripts/stage-python-license.sh
 bridgeclip/scripts/verify-packaged-mac.sh
 bridgeclip/src/main/auto-updater.ts
