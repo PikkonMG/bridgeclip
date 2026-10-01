@@ -45,6 +45,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Mai
 - The Linux AppImage starts without libfuse2, which current Ubuntu, Debian and Fedora no longer install, and keeps the app sandbox where the system allows it.
 - The Linux DEB installs everything it needs to start on minimal Ubuntu 22.04 and 24.04 systems.
 - Linux launchers and docks show the BridgeClip icon and group its windows with the launcher.
+- Linux DEB and RPM installs update from **Restart to update**, which asks for an administrator password and says so if the install fails. They no longer try to install silently when you quit.
+- **Settings → About** says when a Linux copy can't update itself, such as an extracted AppImage, instead of doing nothing.
 
 ## [0.1.19] - 2026-09-27
 
